@@ -1,12 +1,13 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, Zap, BarChart3, Dices, Calculator, Target, ArrowRight, Sparkles } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const features = [
     {
@@ -60,6 +61,10 @@ const Index = () => {
   ];
 
   const mathSymbols = ["+", "×", "÷", "=", "π", "∑", "%", "√"];
+
+  const handleStartLearning = () => {
+    navigate('/dashboard');
+  };
 
   return (
     <div className="min-h-screen bg-[#0F1419] text-white overflow-hidden">
@@ -136,6 +141,7 @@ const Index = () => {
             transition={{ duration: 0.6, delay: 0.8 }}
           >
             <Button 
+              onClick={handleStartLearning}
               size="lg" 
               className="bg-grok-orange hover:bg-grok-orange/90 text-white text-lg px-12 py-6 rounded-full pulse-glow"
             >
@@ -279,6 +285,7 @@ const Index = () => {
               Join thousands of students already mastering math through interactive animations
             </p>
             <Button 
+              onClick={handleStartLearning}
               size="lg"
               className="bg-grok-orange hover:bg-grok-orange/90 text-white text-lg px-12 py-6 rounded-full"
             >
