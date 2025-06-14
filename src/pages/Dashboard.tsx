@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, Coins, Target, Trophy, Book, ArrowRight } from "lucide-react";
+import { Brain, Coins, Target, Trophy, Book, ArrowRight, Zap, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface UserProgress {
@@ -29,13 +29,13 @@ const Dashboard = () => {
     } else {
       // Initialize new user
       const newUser: UserProgress = {
-        name: "Student",
+        name: "Math Explorer",
         currentGrade: 1,
         coins: 100,
         streak: 0,
         totalProblems: 0,
         accuracy: 0,
-        achievements: [],
+        achievements: ["Welcome to ANIMIND! 🎉"],
         gradeProgress: {}
       };
       localStorage.setItem('animind_user', JSON.stringify(newUser));
@@ -43,41 +43,82 @@ const Dashboard = () => {
     }
   }, []);
 
+  // Comprehensive grade topics with advanced descriptions
   const gradeTopics = {
     1: [
-      { id: 'counting', title: 'Counting', description: 'Learn to count from 1 to 20', icon: '🔢' },
-      { id: 'addition', title: 'Basic Addition', description: 'Add numbers up to 10', icon: '➕' },
-      { id: 'shapes', title: 'Shapes', description: 'Identify basic shapes', icon: '🔺' },
-      { id: 'patterns', title: 'Patterns', description: 'Complete simple patterns', icon: '🔄' }
+      { id: 'counting', title: 'Counting Adventures', description: 'Master numbers 1-20 with fun animations', icon: '🔢', difficulty: 'Beginner', coins: 10 },
+      { id: 'addition', title: 'Addition Magic', description: 'Add numbers up to 10 with visual stories', icon: '➕', difficulty: 'Beginner', coins: 15 },
+      { id: 'shapes', title: 'Shape Explorers', description: 'Discover circles, squares, and triangles', icon: '🔺', difficulty: 'Beginner', coins: 12 },
+      { id: 'patterns', title: 'Pattern Detectives', description: 'Find and complete colorful patterns', icon: '🔄', difficulty: 'Easy', coins: 18 }
     ],
     2: [
-      { id: 'two-digit', title: 'Two-digit Math', description: 'Work with numbers up to 100', icon: '💯' },
-      { id: 'time', title: 'Time', description: 'Read clocks and tell time', icon: '🕐' },
-      { id: 'money', title: 'Money', description: 'Count coins and bills', icon: '💰' },
-      { id: 'measurement', title: 'Measurement', description: 'Measure length and weight', icon: '📏' }
+      { id: 'two-digit', title: 'Two-Digit Masters', description: 'Conquer numbers up to 100', icon: '💯', difficulty: 'Easy', coins: 20 },
+      { id: 'time', title: 'Time Travelers', description: 'Learn to read clocks and tell time', icon: '🕐', difficulty: 'Easy', coins: 18 },
+      { id: 'money', title: 'Coin Collectors', description: 'Count coins and make change', icon: '💰', difficulty: 'Easy', coins: 22 },
+      { id: 'measurement', title: 'Measurement Scientists', description: 'Explore length, weight, and volume', icon: '📏', difficulty: 'Easy', coins: 16 }
     ],
     3: [
-      { id: 'multiplication', title: 'Multiplication', description: 'Learn times tables', icon: '✖️' },
-      { id: 'division', title: 'Division', description: 'Share objects equally', icon: '➗' },
-      { id: 'fractions', title: 'Fractions', description: 'Parts of a whole', icon: '🍕' },
-      { id: 'geometry', title: 'Geometry', description: 'Angles and shapes', icon: '📐' }
+      { id: 'multiplication', title: 'Multiplication Warriors', description: 'Master times tables with animations', icon: '✖️', difficulty: 'Medium', coins: 25 },
+      { id: 'division', title: 'Division Champions', description: 'Share objects equally with style', icon: '➗', difficulty: 'Medium', coins: 25 },
+      { id: 'fractions', title: 'Fraction Builders', description: 'Understand parts of a whole', icon: '🍕', difficulty: 'Medium', coins: 28 },
+      { id: 'geometry', title: 'Geometry Architects', description: 'Explore angles and advanced shapes', icon: '📐', difficulty: 'Medium', coins: 20 }
     ],
     4: [
-      { id: 'multi-digit', title: 'Multi-digit Operations', description: 'Complex calculations', icon: '🧮' },
-      { id: 'advanced-geometry', title: 'Advanced Geometry', description: 'Perimeter and area', icon: '📊' },
-      { id: 'data', title: 'Data', description: 'Charts and graphs', icon: '📈' },
-      { id: 'basic-probability', title: 'Basic Probability', description: 'Chance and likelihood', icon: '🎲' }
+      { id: 'multi-digit', title: 'Advanced Calculations', description: 'Complex multi-digit operations', icon: '🧮', difficulty: 'Hard', coins: 30 },
+      { id: 'advanced-geometry', title: 'Geometry Masters', description: 'Calculate perimeter and area', icon: '📊', difficulty: 'Hard', coins: 28 },
+      { id: 'data', title: 'Data Scientists', description: 'Analyze charts and graphs', icon: '📈', difficulty: 'Medium', coins: 22 },
+      { id: 'basic-probability', title: 'Probability Explorers', description: 'Introduction to chance and likelihood', icon: '🎲', difficulty: 'Medium', coins: 25 }
     ],
     5: [
-      { id: 'decimals', title: 'Decimals', description: 'Working with decimal numbers', icon: '🔢' },
-      { id: 'advanced-fractions', title: 'Advanced Fractions', description: 'Mixed numbers and operations', icon: '🎯' },
-      { id: 'volume-area', title: 'Volume/Area', description: '3D shapes and measurements', icon: '📦' },
-      { id: 'advanced-probability', title: 'Advanced Probability', description: 'Multiple events', icon: '🃏' }
+      { id: 'decimals', title: 'Decimal Masters', description: 'Work with decimal numbers expertly', icon: '🔢', difficulty: 'Hard', coins: 30 },
+      { id: 'advanced-fractions', title: 'Fraction Experts', description: 'Mixed numbers and complex operations', icon: '🎯', difficulty: 'Hard', coins: 32 },
+      { id: 'volume-area', title: '3D Geometry Wizards', description: 'Master volume and surface area', icon: '📦', difficulty: 'Hard', coins: 30 },
+      { id: 'advanced-probability', title: 'Probability Masters', description: 'Multiple events and combinations', icon: '🃏', difficulty: 'Expert', coins: 35 }
     ]
   };
 
+  const specialFeatures = [
+    {
+      id: 'probability-lab',
+      title: '🧪 Probability Laboratory',
+      description: 'Interactive experiments with coins, dice, spinners and more!',
+      action: 'Enter Lab',
+      gradient: 'from-purple-600 to-blue-600'
+    },
+    {
+      id: 'achievement-gallery',
+      title: '🏆 Achievement Gallery',
+      description: 'View your mathematical accomplishments and badges',
+      action: 'View Gallery',
+      gradient: 'from-yellow-500 to-orange-600'
+    },
+    {
+      id: 'progress-tracker',
+      title: '📊 Progress Analytics',
+      description: 'Detailed insights into your learning journey',
+      action: 'View Analytics',
+      gradient: 'from-green-500 to-teal-600'
+    }
+  ];
+
   const handleTopicClick = (topicId: string, gradeId: number) => {
     navigate(`/learn/${gradeId}/${topicId}`);
+  };
+
+  const handleSpecialFeatureClick = (featureId: string) => {
+    switch (featureId) {
+      case 'probability-lab':
+        navigate('/probability-lab');
+        break;
+      case 'achievement-gallery':
+        // TODO: Implement achievement gallery
+        break;
+      case 'progress-tracker':
+        // TODO: Implement progress tracker
+        break;
+      default:
+        break;
+    }
   };
 
   const handleGradeChange = (grade: number) => {
@@ -88,9 +129,20 @@ const Dashboard = () => {
     }
   };
 
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'Beginner': return 'text-green-400';
+      case 'Easy': return 'text-green-400';
+      case 'Medium': return 'text-yellow-400';
+      case 'Hard': return 'text-orange-400';
+      case 'Expert': return 'text-red-400';
+      default: return 'text-grok-blue';
+    }
+  };
+
   if (!userProgress) {
     return <div className="min-h-screen bg-[#0F1419] flex items-center justify-center">
-      <div className="text-white text-xl">Loading...</div>
+      <div className="text-white text-xl animate-pulse">Loading your mathematical adventure...</div>
     </div>;
   }
 
@@ -117,6 +169,10 @@ const Dashboard = () => {
               <Target className="w-5 h-5 text-grok-blue" />
               <span className="text-grok-blue font-bold">{userProgress.streak} Day Streak</span>
             </div>
+            <div className="flex items-center space-x-2 bg-[#1E2A3A] px-4 py-2 rounded-lg">
+              <Star className="w-5 h-5 text-yellow-500" />
+              <span className="text-yellow-500 font-bold">{userProgress.achievements.length} Achievements</span>
+            </div>
           </div>
         </div>
       </header>
@@ -129,18 +185,57 @@ const Dashboard = () => {
           className="mb-8"
         >
           <h2 className="text-4xl font-bold mb-2">Welcome back, {userProgress.name}! 🎉</h2>
-          <p className="text-[#B0B6C3] text-lg">Ready to learn some amazing math today?</p>
+          <p className="text-[#B0B6C3] text-lg">Ready for another amazing mathematical adventure?</p>
         </motion.div>
 
-        {/* Grade Selector */}
+        {/* Special Features */}
         <motion.div
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
           className="mb-8"
         >
-          <h3 className="text-2xl font-bold mb-4">Select Your Grade</h3>
-          <div className="flex space-x-4">
+          <h3 className="text-2xl font-bold mb-6 flex items-center">
+            <Zap className="w-6 h-6 text-grok-orange mr-2" />
+            Special Features
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {specialFeatures.map((feature, index) => (
+              <motion.div
+                key={feature.id}
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.1 * index }}
+                whileHover={{ y: -5, scale: 1.02 }}
+                onClick={() => handleSpecialFeatureClick(feature.id)}
+                className="cursor-pointer"
+              >
+                <Card className={`bg-gradient-to-br ${feature.gradient} border-none text-white hover:shadow-2xl transition-all duration-300`}>
+                  <CardHeader className="text-center pb-4">
+                    <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <p className="mb-4 opacity-90">{feature.description}</p>
+                    <Button className="bg-white/20 hover:bg-white/30 text-white border-white/30 w-full">
+                      {feature.action}
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Grade Selector */}
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8"
+        >
+          <h3 className="text-2xl font-bold mb-4">Select Your Grade Level</h3>
+          <div className="flex flex-wrap gap-4">
             {[1, 2, 3, 4, 5].map((grade) => (
               <Button
                 key={grade}
@@ -148,8 +243,8 @@ const Dashboard = () => {
                 variant={userProgress.currentGrade === grade ? "default" : "outline"}
                 className={`px-6 py-3 rounded-lg transition-all duration-300 ${
                   userProgress.currentGrade === grade 
-                    ? 'bg-grok-orange hover:bg-grok-orange/90 text-white' 
-                    : 'border-[#2A3441] text-[#B0B6C3] hover:border-grok-orange/50'
+                    ? 'bg-grok-orange hover:bg-grok-orange/90 text-white shadow-lg' 
+                    : 'border-[#2A3441] text-[#B0B6C3] hover:border-grok-orange/50 hover:text-white'
                 }`}
               >
                 Grade {grade}
@@ -162,42 +257,58 @@ const Dashboard = () => {
         <motion.div
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+          transition={{ delay: 0.3 }}
+          className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"
         >
           <Card className="bg-[#1E2A3A] border-[#2A3441]">
             <CardHeader className="pb-2">
-              <CardTitle className="text-white flex items-center">
+              <CardTitle className="text-white flex items-center text-lg">
                 <Book className="w-5 h-5 text-grok-orange mr-2" />
                 Problems Solved
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-grok-orange">{userProgress.totalProblems}</div>
+              <div className="text-sm text-[#B0B6C3]">Keep solving!</div>
             </CardContent>
           </Card>
 
           <Card className="bg-[#1E2A3A] border-[#2A3441]">
             <CardHeader className="pb-2">
-              <CardTitle className="text-white flex items-center">
+              <CardTitle className="text-white flex items-center text-lg">
                 <Target className="w-5 h-5 text-grok-blue mr-2" />
-                Accuracy
+                Accuracy Rate
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-grok-blue">{userProgress.accuracy}%</div>
+              <div className="text-sm text-[#B0B6C3]">Excellent precision!</div>
             </CardContent>
           </Card>
 
           <Card className="bg-[#1E2A3A] border-[#2A3441]">
             <CardHeader className="pb-2">
-              <CardTitle className="text-white flex items-center">
-                <Trophy className="w-5 h-5 text-yellow-500 mr-2" />
+              <CardTitle className="text-white flex items-center text-lg">
+                <Coins className="w-5 h-5 text-yellow-500 mr-2" />
+                Total Coins
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-yellow-500">{userProgress.coins}</div>
+              <div className="text-sm text-[#B0B6C3]">Mathematical wealth!</div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-[#1E2A3A] border-[#2A3441]">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-white flex items-center text-lg">
+                <Trophy className="w-5 h-5 text-purple-500 mr-2" />
                 Achievements
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-yellow-500">{userProgress.achievements.length}</div>
+              <div className="text-3xl font-bold text-purple-500">{userProgress.achievements.length}</div>
+              <div className="text-sm text-[#B0B6C3]">Unlock more!</div>
             </CardContent>
           </Card>
         </motion.div>
@@ -206,9 +317,9 @@ const Dashboard = () => {
         <motion.div
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.4 }}
         >
-          <h3 className="text-2xl font-bold mb-6">Grade {userProgress.currentGrade} Topics</h3>
+          <h3 className="text-2xl font-bold mb-6">Grade {userProgress.currentGrade} Learning Topics</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {currentTopics.map((topic, index) => (
               <motion.div
@@ -216,22 +327,29 @@ const Dashboard = () => {
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 * index }}
-                whileHover={{ y: -5, scale: 1.02 }}
+                whileHover={{ y: -8, scale: 1.03 }}
                 onClick={() => handleTopicClick(topic.id, userProgress.currentGrade)}
                 className="cursor-pointer"
               >
-                <Card className="bg-[#1E2A3A] border-[#2A3441] hover:border-grok-orange/50 transition-all duration-300 h-full">
+                <Card className="bg-[#1E2A3A] border-[#2A3441] hover:border-grok-orange/50 transition-all duration-300 h-full group">
                   <CardHeader className="text-center pb-4">
-                    <div className="text-4xl mb-2">{topic.icon}</div>
-                    <CardTitle className="text-white text-lg">{topic.title}</CardTitle>
+                    <div className="text-5xl mb-3 group-hover:scale-110 transition-transform duration-300">{topic.icon}</div>
+                    <CardTitle className="text-white text-lg leading-tight">{topic.title}</CardTitle>
+                    <div className={`text-sm font-medium ${getDifficultyColor(topic.difficulty)}`}>
+                      {topic.difficulty}
+                    </div>
                   </CardHeader>
                   <CardContent className="text-center">
-                    <CardDescription className="text-[#B0B6C3] mb-4">
+                    <CardDescription className="text-[#B0B6C3] mb-4 text-sm leading-relaxed">
                       {topic.description}
                     </CardDescription>
-                    <Button className="bg-grok-orange hover:bg-grok-orange/90 text-white w-full">
+                    <div className="flex items-center justify-center mb-4 space-x-2">
+                      <Coins className="w-4 h-4 text-grok-orange" />
+                      <span className="text-grok-orange font-bold">{topic.coins} coins per problem</span>
+                    </div>
+                    <Button className="bg-grok-orange hover:bg-grok-orange/90 text-white w-full group-hover:shadow-lg transition-all duration-300">
                       Start Learning
-                      <ArrowRight className="ml-2 w-4 h-4" />
+                      <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                     </Button>
                   </CardContent>
                 </Card>

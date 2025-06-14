@@ -23,7 +23,8 @@ const Header = () => {
       <nav className="hidden md:flex space-x-8">
         <a href="#features" className="text-[#B0B6C3] hover:text-grok-blue transition-colors">Features</a>
         <a href="#grades" className="text-[#B0B6C3] hover:text-grok-blue transition-colors">Grades</a>
-        <a href="#lab" className="text-[#B0B6C3] hover:text-grok-blue transition-colors">Probability Lab</a>
+        <a href="/probability-lab" className="text-[#B0B6C3] hover:text-grok-orange transition-colors font-semibold">🧪 Probability Lab</a>
+        <a href="/dashboard" className="text-[#B0B6C3] hover:text-grok-blue transition-colors">Dashboard</a>
       </nav>
     </motion.header>
   );
