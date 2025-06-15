@@ -1,10 +1,11 @@
-
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, Coins, Target, Trophy, Book, ArrowRight, Zap, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import ProgressStats from "@/components/dashboard/ProgressStats";
+import SpecialFeatures from "@/components/dashboard/SpecialFeatures";
+import GradeSelector from "@/components/dashboard/GradeSelector";
+import TopicsGrid from "@/components/dashboard/TopicsGrid";
 
 interface UserProgress {
   name: string;
@@ -107,30 +108,6 @@ const Dashboard = () => {
     ]
   };
 
-  const specialFeatures = [
-    {
-      id: 'probability-lab',
-      title: '🧪 Probability Laboratory',
-      description: 'Interactive experiments with coins, dice, spinners and more!',
-      action: 'Enter Lab',
-      gradient: 'from-purple-600 to-blue-600'
-    },
-    {
-      id: 'achievement-gallery',
-      title: '🏆 Achievement Gallery',
-      description: 'View your mathematical accomplishments and badges',
-      action: 'View Gallery',
-      gradient: 'from-yellow-500 to-orange-600'
-    },
-    {
-      id: 'progress-tracker',
-      title: '📊 Progress Analytics',
-      description: 'Detailed insights into your learning journey',
-      action: 'View Analytics',
-      gradient: 'from-green-500 to-teal-600'
-    }
-  ];
-
   const handleTopicClick = (topicId: string, gradeId: number) => {
     navigate(`/learn/${gradeId}/${topicId}`);
   };
@@ -159,17 +136,6 @@ const Dashboard = () => {
     }
   };
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Beginner': return 'text-green-400';
-      case 'Easy': return 'text-green-400';
-      case 'Medium': return 'text-yellow-400';
-      case 'Hard': return 'text-orange-400';
-      case 'Expert': return 'text-red-400';
-      default: return 'text-grok-blue';
-    }
-  };
-
   if (!userProgress) {
     return <div className="min-h-screen bg-[#0F1419] flex items-center justify-center">
       <div className="text-white text-xl animate-pulse">Loading your mathematical adventure...</div>
@@ -180,32 +146,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#0F1419] text-white">
-      {/* Header */}
-      <header className="p-6 border-b border-[#2A3441]">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-grok-orange rounded-lg flex items-center justify-center">
-              <Brain className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold text-grok-orange">ANIMIND</h1>
-          </div>
-          
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2 bg-[#1E2A3A] px-4 py-2 rounded-lg">
-              <Coins className="w-5 h-5 text-grok-orange" />
-              <span className="text-grok-orange font-bold">{userProgress.coins}</span>
-            </div>
-            <div className="flex items-center space-x-2 bg-[#1E2A3A] px-4 py-2 rounded-lg">
-              <Target className="w-5 h-5 text-grok-blue" />
-              <span className="text-grok-blue font-bold">{userProgress.streak} Day Streak</span>
-            </div>
-            <div className="flex items-center space-x-2 bg-[#1E2A3A] px-4 py-2 rounded-lg">
-              <Star className="w-5 h-5 text-yellow-500" />
-              <span className="text-yellow-500 font-bold">{userProgress.achievements.length} Achievements</span>
-            </div>
-          </div>
-        </div>
-      </header>
+      <DashboardHeader userProgress={userProgress} />
 
       <div className="max-w-6xl mx-auto p-6">
         {/* Welcome Section */}
@@ -218,175 +159,14 @@ const Dashboard = () => {
           <p className="text-[#B0B6C3] text-lg">Ready for another amazing mathematical adventure?</p>
         </motion.div>
 
-        {/* Special Features */}
-        <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="mb-8"
-        >
-          <h3 className="text-2xl font-bold mb-6 flex items-center">
-            <Zap className="w-6 h-6 text-grok-orange mr-2" />
-            Special Features
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {specialFeatures.map((feature, index) => (
-              <motion.div
-                key={feature.id}
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.1 * index }}
-                whileHover={{ y: -5, scale: 1.02 }}
-                onClick={() => handleSpecialFeatureClick(feature.id)}
-                className="cursor-pointer"
-              >
-                <Card className={`bg-gradient-to-br ${feature.gradient} border-none text-white hover:shadow-2xl transition-all duration-300`}>
-                  <CardHeader className="text-center pb-4">
-                    <CardTitle className="text-xl">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-center">
-                    <p className="mb-4 opacity-90">{feature.description}</p>
-                    <Button className="bg-white/20 hover:bg-white/30 text-white border-white/30 w-full">
-                      {feature.action}
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Grade Selector */}
-        <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="mb-8"
-        >
-          <h3 className="text-2xl font-bold mb-4">Select Your Grade Level</h3>
-          <div className="flex flex-wrap gap-4">
-            {[1, 2, 3, 4, 5].map((grade) => (
-              <Button
-                key={grade}
-                onClick={() => handleGradeChange(grade)}
-                variant={userProgress.currentGrade === grade ? "default" : "outline"}
-                className={`px-6 py-3 rounded-lg transition-all duration-300 ${
-                  userProgress.currentGrade === grade 
-                    ? 'bg-grok-orange hover:bg-grok-orange/90 text-white shadow-lg' 
-                    : 'border-[#2A3441] text-[#B0B6C3] hover:border-grok-orange/50 hover:text-white'
-                }`}
-              >
-                Grade {grade}
-              </Button>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Progress Stats */}
-        <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"
-        >
-          <Card className="bg-[#1E2A3A] border-[#2A3441]">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-white flex items-center text-lg">
-                <Book className="w-5 h-5 text-grok-orange mr-2" />
-                Problems Solved
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-grok-orange">{userProgress.totalProblems}</div>
-              <div className="text-sm text-[#B0B6C3]">Keep solving!</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-[#1E2A3A] border-[#2A3441]">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-white flex items-center text-lg">
-                <Target className="w-5 h-5 text-grok-blue mr-2" />
-                Accuracy Rate
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-grok-blue">{userProgress.accuracy}%</div>
-              <div className="text-sm text-[#B0B6C3]">Excellent precision!</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-[#1E2A3A] border-[#2A3441]">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-white flex items-center text-lg">
-                <Coins className="w-5 h-5 text-yellow-500 mr-2" />
-                Total Coins
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-yellow-500">{userProgress.coins}</div>
-              <div className="text-sm text-[#B0B6C3]">Mathematical wealth!</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-[#1E2A3A] border-[#2A3441]">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-white flex items-center text-lg">
-                <Trophy className="w-5 h-5 text-purple-500 mr-2" />
-                Achievements
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-purple-500">{userProgress.achievements.length}</div>
-              <div className="text-sm text-[#B0B6C3]">Unlock more!</div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Topics Grid */}
-        <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4 }}
-        >
-          <h3 className="text-2xl font-bold mb-6">Grade {userProgress.currentGrade} Learning Topics (10 Topics Available!)</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            {currentTopics.map((topic, index) => (
-              <motion.div
-                key={topic.id}
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.05 * index }}
-                whileHover={{ y: -6, scale: 1.02 }}
-                onClick={() => handleTopicClick(topic.id, userProgress.currentGrade)}
-                className="cursor-pointer"
-              >
-                <Card className="bg-[#1E2A3A] border-[#2A3441] hover:border-grok-orange/50 transition-all duration-300 h-full group">
-                  <CardHeader className="text-center pb-3">
-                    <div className="text-3xl mb-2 group-hover:scale-110 transition-transform duration-300">{topic.icon}</div>
-                    <CardTitle className="text-white text-sm leading-tight">{topic.title}</CardTitle>
-                    <div className={`text-xs font-medium ${getDifficultyColor(topic.difficulty)}`}>
-                      {topic.difficulty}
-                    </div>
-                  </CardHeader>
-                  <CardContent className="text-center">
-                    <CardDescription className="text-[#B0B6C3] mb-3 text-xs leading-relaxed">
-                      {topic.description}
-                    </CardDescription>
-                    <div className="flex items-center justify-center mb-3 space-x-1">
-                      <Coins className="w-3 h-3 text-grok-orange" />
-                      <span className="text-grok-orange font-bold text-xs">{topic.coins} coins</span>
-                    </div>
-                    <Button className="bg-grok-orange hover:bg-grok-orange/90 text-white w-full text-xs py-1 group-hover:shadow-lg transition-all duration-300">
-                      Start Learning
-                      <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+        <SpecialFeatures onFeatureClick={handleSpecialFeatureClick} />
+        <GradeSelector currentGrade={userProgress.currentGrade} onGradeChange={handleGradeChange} />
+        <ProgressStats userProgress={userProgress} />
+        <TopicsGrid 
+          currentGrade={userProgress.currentGrade} 
+          topics={currentTopics} 
+          onTopicClick={handleTopicClick} 
+        />
       </div>
     </div>
   );
