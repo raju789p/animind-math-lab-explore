@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Learn from "./pages/Learn";
 import ProbabilityLab from "./pages/ProbabilityLab";
+import AchievementGallery from "./pages/AchievementGallery";
+import ProgressAnalytics from "./pages/ProgressAnalytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +25,8 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/learn/:grade/:topic" element={<Learn />} />
           <Route path="/probability-lab" element={<ProbabilityLab />} />
+          <Route path="/achievement-gallery" element={<AchievementGallery />} />
+          <Route path="/progress-analytics" element={<ProgressAnalytics />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
