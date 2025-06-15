@@ -1,10 +1,11 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, Coins, ArrowLeft, Check, X, Lightbulb, Star, Trophy } from "lucide-react";
 import { toast } from "sonner";
+import QuestionDisplay from "@/components/learn/QuestionDisplay";
+import AnswerOptions from "@/components/learn/AnswerOptions";
+import ResultFeedback from "@/components/learn/ResultFeedback";
+import LearnHeader from "@/components/learn/LearnHeader";
 
 interface Question {
   id: string;
@@ -1256,6 +1257,10 @@ const Learn = () => {
     }
   };
 
+  const handleBackToDashboard = () => {
+    navigate('/dashboard');
+  };
+
   const currentQ = questions[currentQuestion];
   if (!currentQ || !userProgress) {
     return <div className="min-h-screen bg-[#0F1419] flex items-center justify-center">
@@ -1263,229 +1268,42 @@ const Learn = () => {
     </div>;
   }
 
-  const getAnimationDisplay = () => {
-    switch (currentQ.animationType) {
-      case 'emoji':
-        return (
-          <motion.div
-            className="text-center py-8 text-5xl leading-relaxed"
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            {currentQ.animation}
-          </motion.div>
-        );
-      case 'visual':
-        return (
-          <motion.div
-            className="text-center py-8 text-3xl leading-relaxed bg-[#1A1F2E] rounded-lg p-6 border border-[#2A3441]"
-            animate={{ opacity: [0.8, 1, 0.8] }}
-            transition={{ duration: 3, repeat: Infinity }}
-          >
-            {currentQ.animation}
-          </motion.div>
-        );
-      case 'interactive':
-        return (
-          <motion.div
-            className="text-center py-8 text-4xl bg-gradient-to-r from-grok-orange/20 to-grok-blue/20 rounded-lg p-6"
-            animate={{ 
-              background: ["linear-gradient(45deg, rgba(255,107,53,0.2), rgba(0,212,255,0.2))",
-                         "linear-gradient(45deg, rgba(0,212,255,0.2), rgba(255,107,53,0.2))"]
-            }}
-            transition={{ duration: 4, repeat: Infinity }}
-          >
-            {currentQ.animation}
-          </motion.div>
-        );
-      default:
-        return (
-          <div className="text-center py-8 text-4xl">
-            {currentQ.animation}
-          </div>
-        );
-    }
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'easy': return 'text-green-400';
-      case 'medium': return 'text-yellow-400';
-      case 'hard': return 'text-red-400';
-      default: return 'text-grok-blue';
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#0F1419] text-white">
-      {/* Header */}
-      <header className="p-6 border-b border-[#2A3441]">
-        <div className="max-w-4xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <Button
-              onClick={() => navigate('/dashboard')}
-              variant="outline"
-              className="border-[#2A3441] text-[#B0B6C3] hover:border-grok-orange/50"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
-            </Button>
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-grok-orange rounded-lg flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-grok-orange">ANIMIND</span>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2 bg-[#1E2A3A] px-4 py-2 rounded-lg">
-              <Coins className="w-5 h-5 text-grok-orange" />
-              <span className="text-grok-orange font-bold">{userProgress.coins}</span>
-            </div>
-            <div className="flex items-center space-x-2 bg-[#1E2A3A] px-4 py-2 rounded-lg">
-              <Trophy className="w-5 h-5 text-yellow-500" />
-              <span className="text-yellow-500 font-bold">{userProgress.streak} streak</span>
-            </div>
-            <div className="text-[#B0B6C3] text-sm">
-              Question {currentQuestion + 1} of {questions.length}
-            </div>
-          </div>
-        </div>
-      </header>
+      <LearnHeader 
+        userProgress={userProgress}
+        currentQuestion={currentQuestion}
+        totalQuestions={questions.length}
+        onBackToDashboard={handleBackToDashboard}
+      />
 
       <div className="max-w-4xl mx-auto p-6">
-        {/* Topic Header */}
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="text-center mb-6"
-        >
-          <h1 className="text-3xl font-bold text-grok-orange mb-2">
-            Grade {grade} - {topic?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-          </h1>
-          <div className={`text-sm font-medium ${getDifficultyColor(currentQ.difficulty)}`}>
-            Difficulty: {currentQ.difficulty.toUpperCase()}
-          </div>
-        </motion.div>
+        <QuestionDisplay 
+          question={currentQ}
+          currentQuestion={currentQuestion}
+          totalQuestions={questions.length}
+          grade={grade || ''}
+          topic={topic || ''}
+        />
 
-        {/* Question Card */}
-        <motion.div
-          key={currentQuestion}
-          initial={{ x: 300, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card className="bg-[#1E2A3A] border-[#2A3441] mb-8">
-            <CardHeader>
-              <CardTitle className="text-white text-2xl text-center leading-relaxed">
-                {currentQ.question}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {/* Animation Display */}
-              {getAnimationDisplay()}
-              
-              {/* Answer Options */}
-              <div className="grid grid-cols-2 gap-4 mt-8">
-                {currentQ.options.map((option, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    className={`p-6 rounded-lg border-2 transition-all duration-300 ${
-                      selectedAnswer === index
-                        ? 'border-grok-orange bg-grok-orange/20 shadow-lg'
-                        : 'border-[#2A3441] hover:border-grok-orange/50 hover:bg-[#2A3441]/50'
-                    } ${showResult && index === currentQ.correctAnswer ? 'border-green-500 bg-green-500/20' : ''}
-                    ${showResult && selectedAnswer === index && index !== currentQ.correctAnswer ? 'border-red-500 bg-red-500/20' : ''}`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    disabled={showResult}
-                  >
-                    <div className="text-white text-xl font-semibold">{option}</div>
-                  </motion.button>
-                ))}
-              </div>
+        <AnswerOptions 
+          question={currentQ}
+          selectedAnswer={selectedAnswer}
+          showResult={showResult}
+          onAnswerSelect={handleAnswerSelect}
+          onSubmitAnswer={handleSubmitAnswer}
+        />
 
-              {/* Submit Button */}
-              {!showResult && (
-                <div className="text-center mt-8">
-                  <Button
-                    onClick={handleSubmitAnswer}
-                    disabled={selectedAnswer === null}
-                    className="bg-grok-orange hover:bg-grok-orange/90 text-white px-8 py-3 text-lg font-semibold"
-                  >
-                    Submit Answer
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Result Section */}
         <AnimatePresence>
           {showResult && (
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -50, opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card className={`border-2 ${isCorrect ? 'border-green-500 bg-green-500/10' : 'border-red-500 bg-red-500/10'}`}>
-                <CardContent className="p-8 text-center">
-                  {isCorrect ? (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    >
-                      <div className="text-green-500 mb-4">
-                        <Check className="w-20 h-20 mx-auto" />
-                      </div>
-                      <h3 className="text-4xl font-bold text-green-500 mb-4">Outstanding! 🎉</h3>
-                      <motion.div
-                        className="flex items-center justify-center space-x-3 mb-6"
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 0.8 }}
-                      >
-                        <Coins className="w-8 h-8 text-grok-orange" />
-                        <span className="text-3xl font-bold text-grok-orange">+{earnedCoins} coins!</span>
-                        <Star className="w-8 h-8 text-yellow-500" />
-                      </motion.div>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    >
-                      <div className="text-red-500 mb-4">
-                        <X className="w-20 h-20 mx-auto" />
-                      </div>
-                      <h3 className="text-4xl font-bold text-red-500 mb-4">Keep Learning! 💪</h3>
-                      <div className="flex items-center justify-center space-x-2 mb-6">
-                        <Lightbulb className="w-8 h-8 text-yellow-500" />
-                        <span className="text-2xl text-yellow-500">Every mistake is a step forward!</span>
-                      </div>
-                    </motion.div>
-                  )}
-                  
-                  <div className="bg-[#1E2A3A] p-6 rounded-lg mb-6">
-                    <h4 className="text-2xl font-bold text-grok-blue mb-3">💡 Explanation:</h4>
-                    <p className="text-[#B0B6C3] text-lg leading-relaxed">{currentQ.explanation}</p>
-                  </div>
-
-                  <Button
-                    onClick={handleNextQuestion}
-                    className="bg-grok-orange hover:bg-grok-orange/90 text-white px-8 py-4 text-lg font-semibold"
-                  >
-                    {currentQuestion < questions.length - 1 ? 'Next Challenge' : 'Complete Topic'} 
-                    <ArrowLeft className="ml-2 w-5 h-5 rotate-180" />
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
+            <ResultFeedback 
+              isCorrect={isCorrect}
+              explanation={currentQ.explanation}
+              earnedCoins={earnedCoins}
+              currentQuestion={currentQuestion}
+              totalQuestions={questions.length}
+              onNextQuestion={handleNextQuestion}
+            />
           )}
         </AnimatePresence>
       </div>
